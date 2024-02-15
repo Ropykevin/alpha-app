@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <h1>Product List</h1>
-    
+
     <!-- Add Product Modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
         Add Product
@@ -68,6 +68,23 @@
             {% endfor %}
         </tbody>
     </table>
+
+
+    <div id="app">{{ message }}</div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const { createApp, ref } = Vue
+
+        createApp({
+            setup() {
+                const message = ref('Hello vue!')
+                return {
+                    message
+                }
+            }
+        }).mount('#app')
+    </script>
 
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">

@@ -1,0 +1,129 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    
+    <div id="app">
+<div v-if="loading">Loading...</div>
+<li v-for="item in items">
+    {{ prod.id }}--{{prod.name}}--{{ prod.price}}
+</li>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // const { createApp, ref } = Vue
+        Vue.createApp({
+            data() {
+                let message = 2
+                let test=8
+                let t=0
+                let res=[]
+                let loading=false
+                let prods=null
+                console.log("called on data")
+                return {t,message,test,res,loading,prods}
+            },
+            methods:{
+                 calc() {
+                    this.t=this.message+this.test
+                    console.log("call on my calc", this.message + this.test)
+                },
+
+                myproducts(){
+                    res.push({"id":1,"name":"lema","price":780})
+                    console.log(this.res)
+
+                },
+                fetch_products(){
+                    axios.get('http://127.0.0.1:5000')
+                        .then(response => {
+                            this.data = response.data;
+                            this.loading = false;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                            this.loading = false;
+                        });
+                }
+            },
+            created(){
+                console.log("called on created")
+                this.calc()
+                this.myproducts()
+                this.fetch_products()
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div v-if="loading">Loading...</div>
+        <ul>
+            <li v-for="prod in prods" :key="prod.id">
+                {{ prod.id }}--{{ prod.name }}--{{ prod.price }}
+            </li>
+        </ul>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    message: 2,
+                    test: 8,
+                    t: 0,
+                    res: [],
+                    loading: false,
+                    prods: null
+                };
+            },
+            methods: {
+                calc() {
+                    this.t = this.message + this.test;
+                    console.log("call on my calc", this.message + this.test);
+                },
+                myproducts() {
+                    this.res.push({ "id": 1, "name": "lema", "price": 780 });
+                    console.log(this.res);
+                },
+                fetch_products() {
+                    this.loading = true;
+                    axios.get('http://127.0.0.1:5000/products')
+                        .then(response => {
+                            this.prods = response.data;
+                            this.loading = false;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching data:', error);
+                            this.loading = false;
+                        });
+                }
+            },
+            created() {
+                console.log("called on created");
+                this.calc();
+                this.myproducts();
+                this.fetch_products();
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
