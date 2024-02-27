@@ -178,30 +178,7 @@
                         });
                 },
 
-                renderlineChart() {
-                    // Dummy data for demonstration
-                    const dummyData = {
-                        labels: ['2024-01', '2024-02', '2024-03', '2024-04', '2024-05'],
-                        values: [100, 200, 150, 300, 250]
-                    };
-
-                    // Convert dummy data to Morris.js compatible format
-                    const morrisData = [];
-                    for (let i = 0; i < dummyData.labels.length; i++) {
-                        morrisData.push({ x: dummyData.labels[i], y: dummyData.values[i] });
-                    }
-
-                    // Initialize Morris line chart
-                    new Morris.Line({
-                        element: 'lineChart',
-                        data: morrisData,
-                        xkey: 'x',
-                        ykeys: ['y'],
-                        labels: ['Sales'],
-                        parseTime: false, // Disable automatic parsing of date/time
-                        lineColors: ['#00ff00'] // Set line color
-                    });
-                }
+                
             },
             mounted() {
                 this.renderChart();
