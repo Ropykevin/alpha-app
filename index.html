@@ -12,8 +12,6 @@
 </head>
 
 <body>
-
-
     <div id="app">
         <!-- <div v-if="loading">Loading...</div> -->
         <table class="table">
@@ -42,7 +40,7 @@
                                     <label for="price" class="form-label">Price</label>
                                     <input type="number" class="form-control" id="price" v-model="product_price" />
                                 </div>
-                                <button type="submit" class="btn btn-primary" @click="add_product">ADD</button>
+                                <button type="submit" class="btn btn-primary">ADD</button>
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -59,7 +57,6 @@
                 </tr>
             </thead>
             <tbody>
-
                 <tr v-for="prod in prods" :key="prod.id">
                     <td>{{ prod.id }}</td>
                     <td>{{ prod.name }}</td>
@@ -67,9 +64,8 @@
                 </tr>
             </tbody>
         </table>
-        <canvas id="myChart"></canvas>
+        <canvas id="myChart"></canvas> <br>
         <div id="lineChart"></div> <!-- Changed from canvas to div -->
-
     </div>
 
     <!-- jQuery -->
@@ -83,7 +79,6 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
         Vue.createApp({
             data() {
@@ -131,15 +126,15 @@
                 close_modal() {
                     $('#exampleModal').modal('hide');
                 },
-               renderChart() {
+                renderChart() {
                     axios.get("http://127.0.0.1:5000/dashboard")
                         .then(response => {
                             const data = response.data;
                             const chartData = {
-                                labels: data.sales_data.map(item => item.date),
+                                labels: data.salesproduct_data.map(item => item.name),
                                 datasets: [{
-                                    label: 'Sales per Day',
-                                    data: data.sales_data.map(item => item.total_sales),
+                                    label: 'Sales per product',
+                                    data: data.salesproduct_data.map(item => item.sales_product),
                                     backgroundColor: [
                                         'rgba(255, 99, 132, 0.2)',
                                         'rgba(54, 162, 235, 0.2)',
@@ -177,17 +172,41 @@
                             console.error("Error rendering chart:", error);
                         });
                 },
+                renderlineChart() {
+                    axios.get("http://127.0.0.1:5000/dashboard")
+                        .then(response => {
+                            const data = response.data;
+                            const salesData = data.sales_data;
 
-                
+                            const morrisData = salesData.map(item => ({
+                                label: 'Sales per day',
+                                x: item.date,
+                                y: item.total_sales
+                            }));
+
+                            // Initialize Morris line chart
+                            new Morris.Line({
+                                element: 'lineChart',
+                                data: morrisData,
+                                xkey: 'x',
+                                ykeys: ['y'],
+                                labels: ['Sales'],
+                                parseTime: false, // Disable automatic parsing of date/time
+                                lineColors: ['#00ff00'] // Set line color
+                            });
+                        })
+                        .catch(error => {
+                            console.error("Error rendering line chart:", error);
+                        });
+                }
+
             },
             mounted() {
-                this.renderChart();
+                this.renderChart()
                 this.renderlineChart();
-            },
-            created() {
                 this.fetch_products();
             }
-        }).mount('#app')
+        }).mount('#app');
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
