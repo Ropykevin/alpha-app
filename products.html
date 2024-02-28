@@ -14,6 +14,7 @@
 </head>
 
 <body>
+    
     <div id="app">
 
         <!-- Button trigger modal -->
@@ -93,6 +94,9 @@
                             this.prods = response.data;
                             console.log("This is my products:", this.prods);
                             this.loading = false;
+                             $(document).ready(function () {
+                                $('#productsTable').DataTable();
+                            });
                         })
                         .catch(error => {
                             console.error("Error fetching data:", error);
@@ -119,79 +123,6 @@
                 },
                 close_modal() {
                     $('#exampleModal').modal('hide');
-                },
-                renderChart() {
-                    axios.get("http://127.0.0.1:5000/dashboard")
-                        .then(response => {
-                            const data = response.data;
-                            const chartData = {
-                                labels: data.salesproduct_data.map(item => item.name),
-                                datasets: [{
-                                    label: 'Sales per product',
-                                    data: data.salesproduct_data.map(item => item.sales_product),
-                                    backgroundColor: [
-                                        'rgba(255, 99, 132, 0.2)',
-                                        'rgba(54, 162, 235, 0.2)',
-                                        'rgba(255, 206, 86, 0.2)',
-                                        'rgba(75, 192, 192, 0.2)',
-                                        'rgba(153, 102, 255, 0.2)',
-                                        'rgba(255, 159, 64, 0.2)'
-                                    ],
-                                    borderColor: [
-                                        'rgba(255, 99, 132, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(255, 206, 86, 1)',
-                                        'rgba(75, 192, 192, 1)',
-                                        'rgba(153, 102, 255, 1)',
-                                        'rgba(255, 159, 64, 1)'
-                                    ],
-                                    borderWidth: 1
-                                }]
-                            };
-
-                            const myChart = new Chart(document.getElementById('myChart').getContext('2d'), {
-                                type: 'bar',
-                                data: chartData,
-                                options: {
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true
-                                        }
-                                    }
-                                }
-                            });
-                            this.chartRendered = true;
-                        })
-                        .catch(error => {
-                            console.error("Error rendering chart:", error);
-                        });
-                },
-                renderlineChart() {
-                    axios.get("http://127.0.0.1:5000/dashboard")
-                        .then(response => {
-                            const data = response.data;
-                            const salesData = data.sales_data;
-
-                            const morrisData = salesData.map(item => ({
-                                label: 'Sales per day',
-                                x: item.date,
-                                y: item.total_sales
-                            }));
-
-                            // Morris line chart
-                            new Morris.Line({
-                                element: 'lineChart',
-                                data: morrisData,
-                                xkey: 'x',
-                                ykeys: ['y'],
-                                labels: ['Sales'],
-                                parseTime: false, // Disable automatic parsing of date/time
-                                lineColors: ['#00ff00'] // Set line color
-                            });
-                        })
-                        .catch(error => {
-                            console.error("Error rendering line chart:", error);
-                        });
                 }
             },
             mounted() {
@@ -199,9 +130,7 @@
             }
         }).mount('#app');
 
-        $(document).ready(function () {
-            $('#productsTable').DataTable();
-        });
+       
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

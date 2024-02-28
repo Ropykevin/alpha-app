@@ -80,6 +80,10 @@
                     axios.get("http://127.0.0.1:5000/sales")
                         .then((response) => {
                             this.sales = response.data;
+                            
+                            $(document).ready(function () {
+                                $('#salesTable').DataTable();
+                            });
                         })
                         .catch((error) => {
                             console.error("Error fetching data:", error);
@@ -117,9 +121,6 @@
             }
         }).mount('#app')
 
-        $(document).ready(function () {
-            $('#salesTable').DataTable();
-        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
