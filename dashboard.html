@@ -13,9 +13,43 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">MY DUKA</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Navbar items -->
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sales.html">Sales</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div id="app">
-        <canvas id="myChart"></canvas>
-        <div id="lineChart"></div>
+        
+        <div class="container">
+
+            <canvas id="myChart"></canvas>
+            <div>
+                <!-- <h1>sales per day</h1> -->
+                <div id="lineChart"></div>
+            </div>
+        </div>
     </div>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -87,7 +121,7 @@
                             const salesData = data.sales_data;
 
                             const morrisData = salesData.map(item => ({
-                                label: 'Sales per day',
+                                title: 'sales per day',
                                 x: item.date,
                                 y: item.total_sales
                             }));
@@ -96,9 +130,16 @@
                             new Morris.Line({
                                 element: 'lineChart',
                                 data: morrisData,
+                                options :{
+                                        title: {
+                                            display: true,
+                                            text: 'Sales per Day' // Title of your graph
+                                        }
+                                    
+                                },
                                 xkey: 'x',
                                 ykeys: ['y'],
-                                labels: ['Sales'],
+                                labels: ['Sales '],
                                 parseTime: false, // Disable automatic parsing of date/time
                                 lineColors: ['#00ff00'] // Set line color
                             });

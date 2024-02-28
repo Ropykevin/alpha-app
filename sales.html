@@ -12,53 +12,82 @@
 </head>
 
 <body>
-    <div id="app">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            Make sale
-        </button>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">MY DUKA</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Navbar items -->
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sales.html">Sales</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Sale Details</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <select v-model="selected_Product_Id" class="form-select">
-                            <option value="" disabled>Select a product</option>
-                            <option v-for="product in products" :value="product.id">{{ product.name }}</option>
-                        </select>
-                        <input type="number" v-model="quantity" placeholder="Quantity" class="form-control">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="make_sale">Make Sale</button>
+    <div id="app">
+        <div class="container">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Make sale
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Sale Details</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <select v-model="selected_Product_Id" class="form-select">
+                                <option value="" disabled>Select a product</option>
+                                <option v-for="product in products" :value="product.id">{{ product.name }}</option>
+                            </select>
+                            <input type="number" v-model="quantity" placeholder="Quantity" class="form-control">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" @click="make_sale">Make Sale</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <table id="salesTable" class="table">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Product ID</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Created At</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="sale in sales" :key="sale.id">
-                    <td>{{ sale.id }}</td>
-                    <td>{{ sale.pid }}</td>
-                    <td>{{ sale.quantity }}</td>
-                    <td>{{ sale.created_at }}</td>
-                </tr>
-            </tbody>
-        </table>
+            <table id="salesTable" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Product ID</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="sale in sales" :key="sale.id">
+                        <td>{{ sale.id }}</td>
+                        <td>{{ sale.pid }}</td>
+                        <td>{{ sale.quantity }}</td>
+                        <td>{{ sale.created_at }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -80,7 +109,7 @@
                     axios.get("http://127.0.0.1:5000/sales")
                         .then((response) => {
                             this.sales = response.data;
-                            
+
                             $(document).ready(function () {
                                 $('#salesTable').DataTable();
                             });
