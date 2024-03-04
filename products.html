@@ -148,14 +148,22 @@
                     product_name: null,
                     product_cost: null,
                     product_price: null,
+                    username: null,
                     flashMessage: null
                 }
             },
             methods: {
                 fetch_products() {
-                    axios.get("http://127.0.0.1:5000/products")
+                    const token = localStorage.getItem('access_token');
+
+                    axios.get("http://127.0.0.1:5000/products", {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
                         .then(response => {
                             this.prods = response.data;
+
                             $(document).ready(function () {
                                 $('#productsTable').DataTable();
                             });
@@ -166,11 +174,19 @@
                 },
                 add_product() {
                     const productName = this.product_name; // Store the product name temporarily
+                    const token = localStorage.getItem('access_token');
+
                     axios.post("http://127.0.0.1:5000/products", {
-                        name: this.product_name,
-                        cost: this.product_cost,
-                        price: this.product_price
-                    })
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    },
+                        {
+                            name: this.product_name,
+                            cost: this.product_cost,
+                            price: this.product_price,
+                            username: this.username
+                        })
                         .then(response => {
                             this.product_name = '';
                             this.product_cost = '';

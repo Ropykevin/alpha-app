@@ -84,12 +84,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
         const app = Vue.createApp({
             data() {
+
                 return {
                     registerForm: {
                         username: '',
@@ -97,7 +98,7 @@
                     },
                     loginForm: {
                         username: '',
-                        password: '' 
+                        password: ''
                     },
                     message: ''
                 };
@@ -115,9 +116,12 @@
                         });
                 },
                 loginUser() {
-                    axios.post('/login', this.loginForm)
+                    axios.post('http://127.0.0.1:5000/login', this.loginForm)
                         .then(response => {
                             this.message = 'Login successful';
+                            this.username = response.data.username;
+                            localStorage.setItem('access_token', response.data.access_token);
+
                             window.location.href = 'dashboard.html';
 
                         })
