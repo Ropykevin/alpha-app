@@ -10,13 +10,39 @@
     <!-- Morris.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <style>
+        /* Table styles */
+        #productsTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
+        #productsTable th,
+        #productsTable td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        #productsTable th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        #productsTable tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #productsTable tbody tr:hover {
+            background-color: #ddd;
+        }
+    </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="">MY DUKA</a>
+            <a class="navbar-brand" href="index.html"><img src="logo.jpg" alt="">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -24,37 +50,40 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <!-- Navbar items -->
                 </ul>
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav ">
                     <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                        <a class="nav-link" style="color: white;" href="dashboard.html">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="products.html">Products</a>
+                        <a class="nav-link" style="color: white;" href="products.html">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="sales.html">Sales</a>
+                        <a class="nav-link" style="color: white;" href="sales.html">Sales</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-
-
     <div id="app">
         <div class="container">
 
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Add products
-            </button>
+            <div id="addproduct">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Add products
+                </button>
+            </div>
+
 
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog">
+                    <div v-if="flashMessage" class="alert alert-success" role="alert">
+                        {{ flashMessage }}
+                    </div>
                     <div class="modal-content">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">product details</h1>
@@ -66,6 +95,10 @@
                                     <label for="name" class="form-label">product Name</label>
                                     <input type="text" class="form-control" id="name" aria-describedby="emailHelp"
                                         v-model="product_name" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="cost" class="form-label">cost</label>
+                                    <input type="number" class="form-control" id="cost" v-model="product_cost" />
                                 </div>
                                 <div class="mb-3">
                                     <label for="price" class="form-label">Price</label>
@@ -85,6 +118,7 @@
                     <tr>
                         <th scope="col">id</th>
                         <th scope="col">name</th>
+                        <th scope="col">cost</th>
                         <th scope="col">price</th>
                     </tr>
                 </thead>
@@ -92,6 +126,7 @@
                     <tr v-for="prod in prods" :key="prod.id">
                         <td>{{ prod.id }}</td>
                         <td>{{ prod.name }}</td>
+                        <td>{{ prod.cost }}</td>
                         <td>{{ prod.price }}</td>
                     </tr>
                 </tbody>
@@ -106,63 +141,63 @@
 
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script>
-
         Vue.createApp({
             data() {
                 return {
-                    loading: false,
                     prods: [],
                     product_name: null,
+                    product_cost: null,
                     product_price: null,
-                    chartRendered: false
+                    flashMessage: null
                 }
             },
             methods: {
                 fetch_products() {
-                    this.loading = true;
                     axios.get("http://127.0.0.1:5000/products")
                         .then(response => {
-                            console.log("Response from API", response);
                             this.prods = response.data;
-                            console.log("This is my products:", this.prods);
-                            this.loading = false;
                             $(document).ready(function () {
                                 $('#productsTable').DataTable();
                             });
                         })
                         .catch(error => {
                             console.error("Error fetching data:", error);
-                            this.loading = false;
                         });
                 },
                 add_product() {
-                    this.loading = true;
+                    const productName = this.product_name; // Store the product name temporarily
                     axios.post("http://127.0.0.1:5000/products", {
                         name: this.product_name,
+                        cost: this.product_cost,
                         price: this.product_price
                     })
                         .then(response => {
-                            console.log("product added:", response.data);
                             this.product_name = '';
+                            this.product_cost = '';
                             this.product_price = '';
                             this.fetch_products();
-                            this.close_modal();
+                            this.showFlashMessage(`${productName} added successfully!`); // Use the temporary variable
                         })
                         .catch(error => {
                             console.error("Error adding data:", error);
-                            this.loading = false;
+                            this.showFlashMessage('Error adding product!');
                         });
                 },
+
                 close_modal() {
                     $('#exampleModal').modal('hide');
+                },
+                showFlashMessage(message) {
+                    this.flashMessage = message;
+                    setTimeout(() => {
+                        this.flashMessage = null;
+                    }, 3000);
                 }
             },
             mounted() {
                 this.fetch_products();
             }
         }).mount('#app');
-
-
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

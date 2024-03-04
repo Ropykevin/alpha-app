@@ -1,0 +1,128 @@
+/* Table styles */
+table.dataTable {
+    border-spacing: 1;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+table.dataTable * {
+    position: relative;
+}
+
+table.dataTable td,
+table.dataTable th {
+    padding-left: 8px;
+}
+
+table.dataTable thead tr {
+    height: 60px;
+    background: #FFED86;
+    font-size: 16px;
+}
+
+table.dataTable tbody tr {
+    height: 48px;
+    border-bottom: 1px solid #E3F1D5;
+}
+
+table.dataTable tbody tr:last-child {
+    border: 0;
+}
+
+table.dataTable td,
+table.dataTable th {
+    text-align: left;
+}
+
+table.dataTable td.l,
+table.dataTable th.l {
+    text-align: right;
+}
+
+table.dataTable td.c,
+table.dataTable th.c {
+    text-align: center;
+}
+
+table.dataTable td.r,
+table.dataTable th.r {
+    text-align: center;
+}
+
+/* Responsive styles for small screens */
+@media screen and (max-width: 768px) {
+    table.dataTable {
+        display: block;
+    }
+
+    table.dataTable>*,
+    table.dataTable tr,
+    table.dataTable td,
+    table.dataTable th {
+        display: block;
+    }
+
+    table.dataTable thead {
+        display: none;
+    }
+
+    table.dataTable tbody tr {
+        height: auto;
+        padding: 8px 0;
+    }
+
+    table.dataTable tbody tr td {
+        padding-left: 45%;
+        margin-bottom: 12px;
+    }
+
+    table.dataTable tbody tr td:last-child {
+        margin-bottom: 0;
+    }
+
+    table.dataTable tbody tr td:before {
+        position: absolute;
+        font-weight: 700;
+        width: 40%;
+        left: 10px;
+        top: 0;
+    }
+
+    table.dataTable tbody tr td:nth-child(1):before {
+        content: "Code";
+    }
+
+    table.dataTable tbody tr td:nth-child(2):before {
+        content: "Stock";
+    }
+
+    table.dataTable tbody tr td:nth-child(3):before {
+        content: "Cap";
+    }
+
+    table.dataTable tbody tr td:nth-child(4):before {
+        content: "Inch";
+    }
+
+    table.dataTable tbody tr td:nth-child(5):before {
+        content: "Box Type";
+    }
+}
+
+/* Body styles */
+body {
+    background: #9BC86A;
+    font: 400 14px 'Calibri', 'Arial';
+    padding: 20px;
+}
+
+blockquote {
+    color: white;
+    text-align: center;
+}
