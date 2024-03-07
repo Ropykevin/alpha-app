@@ -141,6 +141,7 @@
 
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script>
+
         Vue.createApp({
             data() {
                 return {
@@ -155,14 +156,16 @@
             methods: {
                 fetch_products() {
                     const token = localStorage.getItem('access_token');
-
+                    console.log("token", token)
                     axios.get("http://127.0.0.1:5000/products", {
                         headers: {
-                            Authorization: `Bearer ${token}`
+                            Authorization: `${token}`
                         }
+
                     })
                         .then(response => {
                             this.prods = response.data;
+                            console.log(response.headers);
 
                             $(document).ready(function () {
                                 $('#productsTable').DataTable();
@@ -172,21 +175,22 @@
                             console.error("Error fetching data:", error);
                         });
                 },
+
                 add_product() {
                     const productName = this.product_name; // Store the product name temporarily
                     const token = localStorage.getItem('access_token');
 
-                    axios.post("http://127.0.0.1:5000/products", {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    },
+                    axios.post("http://127.0.0.1:5000/products",
                         {
                             name: this.product_name,
                             cost: this.product_cost,
                             price: this.product_price,
-                            username: this.username
-                        })
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        },)
                         .then(response => {
                             this.product_name = '';
                             this.product_cost = '';
@@ -211,6 +215,7 @@
                 }
             },
             mounted() {
+                console.log("access_token from storage", localStorage.getItem('access_token'))
                 this.fetch_products();
             }
         }).mount('#app');
