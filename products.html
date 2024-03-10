@@ -132,6 +132,8 @@
                 </tbody>
             </table>
         </div>
+        <button type="submit" @click="signOut">Logout</button>
+
 
     </div>
 
@@ -212,7 +214,17 @@
                     setTimeout(() => {
                         this.flashMessage = null;
                     }, 3000);
+                },
+                signOut() {
+                    console.log("signOut method called");
+                    try {
+                        localStorage.removeItem('access_token');
+                    } catch (error) {
+                        console.error('Error removing access token:', error);
+                    }
+                    window.location.href = 'login.html';
                 }
+
             },
             mounted() {
                 const token = localStorage.getItem("access_token");

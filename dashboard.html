@@ -154,12 +154,12 @@
         <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-                <button type="submit" @click="signOut"> log out</button>
             </li>
         </ul>
     </nav>
 
-    <div class="container-fluid">
+
+    <div class="container-fluid" id="app">
         <div class="row">
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
                 <div class="position-sticky pt-3">
@@ -219,12 +219,7 @@
                                 Year-end sale
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" @click="signOut">
-                                <span data-feather="log-out"></span>
-                                Logout
-                            </a>
-                        </li>
+                        <button type="submit" @click="signOut">Logout</button>
 
                     </ul>
                 </div>
@@ -246,7 +241,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="app">
+                <div >
 
                     <div class="container">
                         <div class="row">
@@ -369,6 +364,7 @@
                         this.renderprofit_per_day();
                         this.fetchRecentProducts();
                         this.fetchRecentSales();
+
 
                     }
                 }
@@ -522,22 +518,20 @@
                             console.error("Error fetching recent products:", error);
                         });
                 },
+
                 signOut() {
-                    axios.post("http://127.0.0.1:5000/logout")
-                        .then(response => {
-                            console.log(response.data.message);
-                            localStorage.removeItem('access_token'); 
-                            window.location.href = 'login.html';
-                        })
-                        .catch(error => {
-                            console.error('Logout failed:', error);
-                        });
+                    console.log("signOut method called");
+                    try {
+                        localStorage.removeItem('access_token');
+                    } catch (error) {
+                        console.error('Error removing access token:', error);
+                    }
+                    window.location.href = 'login.html';
                 }
 
-
-
             }
-        }).mount('#app');
+        }
+        ).mount('#app');
     </script>
 
 
