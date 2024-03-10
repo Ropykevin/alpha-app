@@ -154,7 +154,7 @@
         <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
         <ul class="navbar-nav px-3">
             <li class="nav-item text-nowrap">
-                <a class="nav-link" @click="signOut">Sign out</a>
+                <button type="submit" @click="signOut"> log out</button>
             </li>
         </ul>
     </nav>
@@ -219,6 +219,13 @@
                                 Year-end sale
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" @click="signOut">
+                                <span data-feather="log-out"></span>
+                                Logout
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
             </nav>
@@ -347,17 +354,26 @@
             },
 
             mounted() {
+                console.log(localStorage.getItem('access_token'))
+                token = (localStorage.getItem('access_token'))
 
-                if (localStorage.getItem('access_token')) {
+                if (token) {
+                    const tokenData = JSON.parse(atob(token.split(".")[1])); // Decoding base64 URL    
+                    const currentTimestamp = Math.floor(Date.now() / 1000); // Current time in seconds
+                    if (tokenData.exp < currentTimestamp) {
+                        window.location.href = 'login.html'
+                    } else {
+                        this.renderChart();
+                        this.renderLineChart();
+                        this.render_profitChart();
+                        this.renderprofit_per_day();
+                        this.fetchRecentProducts();
+                        this.fetchRecentSales();
 
-                    this.renderChart();
-                    this.renderLineChart();
-                    this.render_profitChart();
-                    this.renderprofit_per_day();
-                    this.fetchRecentProducts();
-                    this.fetchRecentSales();
+                    }
                 }
                 else {
+                    window.location.href = 'login.html'
 
                 }
 
@@ -507,9 +523,17 @@
                         });
                 },
                 signOut() {
-                    localStorage.removeItem('accessToken');
-                    window.location.href = 'register.html';
+                    axios.post("http://127.0.0.1:5000/logout")
+                        .then(response => {
+                            console.log(response.data.message);
+                            localStorage.removeItem('access_token'); 
+                            window.location.href = 'login.html';
+                        })
+                        .catch(error => {
+                            console.error('Logout failed:', error);
+                        });
                 }
+
 
 
             }

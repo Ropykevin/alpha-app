@@ -145,7 +145,16 @@
             },
             methods: {
                 fetch_sales() {
-                    axios.get("http://127.0.0.1:5000/sales")
+                    const token = localStorage.getItem('access_token');
+
+                    axios.get("http://127.0.0.1:5000/sales"
+                        ,
+                        {
+                            headers: {
+                                Authorization: `${token}`
+                            }
+
+                        })
                         .then((response) => {
                             this.sales = response.data;
                             $(document).ready(function () {
@@ -157,7 +166,16 @@
                         });
                 },
                 fetch_products() {
-                    axios.get("http://127.0.0.1:5000/products")
+                    const token = localStorage.getItem('access_token');
+                    console.log(token)
+
+                    axios.get("http://127.0.0.1:5000/products",
+                        {
+                            headers: {
+                                Authorization: `${token}`
+                            }
+
+                        })
                         .then((response) => {
                             this.products = response.data;
                         })
@@ -166,6 +184,8 @@
                         });
                 },
                 make_sale() {
+                    const token = localStorage.getItem('access_token');
+
                     axios.post("http://127.0.0.1:5000/sales", {
                         pid: this.selected_Product_Id,
                         quantity: this.quantity
@@ -185,11 +205,24 @@
                     $('#staticBackdrop').modal('hide');
                 }
             },
-            created() {
-                this.fetch_sales();
-                this.fetch_products();
+            mounted() {
+                const token = localStorage.getItem("access_token");
+                if (token) {
+                    const tokenData = JSON.parse(atob(token.split(".")[1]));
+                    const currentTimestamp = Math.floor(Date.now() / 1000);
+                    if (tokenData.exp < currentTimestamp) {
+                        window.location.href = 'login.html'
+                    }
+                    else {
+                        this.fetch_products();
+                        this.fetch_sales();
+                    }
+                } else {
+                    window.location.href = 'login.html'
+                }
             }
         }).mount('#app')
+
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

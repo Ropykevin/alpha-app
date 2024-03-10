@@ -177,7 +177,7 @@
                 },
 
                 add_product() {
-                    const productName = this.product_name; // Store the product name temporarily
+                    const productName = this.product_name; // the product name temporarily
                     const token = localStorage.getItem('access_token');
 
                     axios.post("http://127.0.0.1:5000/products",
@@ -188,7 +188,7 @@
                         },
                         {
                             headers: {
-                                Authorization: `Bearer ${token}`
+                                Authorization: `${token}`
                             }
                         },)
                         .then(response => {
@@ -215,8 +215,24 @@
                 }
             },
             mounted() {
-                console.log("access_token from storage", localStorage.getItem('access_token'))
-                this.fetch_products();
+                const token = localStorage.getItem("access_token");
+                if (token) {
+                    // Parse the token to extract expiration timestamp
+                    const tokenData = JSON.parse(atob(token.split(".")[1])); // Decoding base64 URL
+
+                    // Check if the token has expired
+                    const currentTimestamp = Math.floor(Date.now() / 1000); // Current time in seconds
+                    if (tokenData.exp < currentTimestamp) {
+                        // Token has expired, redirect
+                        window.location.href = 'login.html'
+                    }
+                    else {
+                        this.fetch_products();
+                    }
+                } else {
+                    window.location.href = 'login.html'
+
+                }
             }
         }).mount('#app');
     </script>
